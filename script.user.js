@@ -27,8 +27,8 @@
     // ==================== 配置 ====================
     const CONFIG = {
         // WebP Atlas 文件路径 - 请修改为你的实际路径
-        ATLAS_URL: 'https://github.com/CYR2077/MWI-MonsterFeminization/resource/monster-atlas.webp',
-        ATLAS_CONFIG_URL: 'https://github.com/CYR2077/MWI-MonsterFeminization/resource/monster-atlas.json',
+        ATLAS_URL: 'https://github.com/CYR2077/MWI-MonsterFeminization/blob/main/resource/monster-atlas.webp',
+        ATLAS_CONFIG_URL: 'https://github.com/CYR2077/MWI-MonsterFeminization/blob/main/resource/monster-atlas.json',
         
         // 可选：备用单独文件路径（当Atlas加载失败时使用）
         FALLBACK_BASE_URL: 'https://your-domain.com/monster-images/'
