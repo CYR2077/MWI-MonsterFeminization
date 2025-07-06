@@ -19,8 +19,22 @@
 
     // 怪物名称列表
     const monsterNames = [
-        "fly", "rat", "skunk", "porcupine", "slimy", "frog", "snake", "swampy", "alligator", "sea_snail", "crab", "aquahorse", "nom_nom", "turtle", "jungle_sprite", "myconid", "treant", "centaur_archer", "gobo_stabby", "gobo_slashy", "gobo_smashy", "gobo_shooty", "gobo_boomy", "eye", "eyes", "veyes", "novice_sorcerer", "ice_sorcerer", "flame_sorcerer", "elementalist", "gummy_bear", "panda", "black_bear", "grizzly_bear", "polar_bear", "magnetic_golem", "stalactite_golem", "granite_golem", "zombie", "vampire", "werewolf", "abyssal_imp", "soul_hunter", "infernal_warlock", "giant_shoebill", "marine_huntress", "luna_empress", "gobo_chieftain", "the_watcher", "chronofrost_sorcerer", "red_panda", "crystal_colossus", "dusk_revenant", "demonic_overlord",
-        "butterjerry", "jackalope", "dodocamel", "manticore", "griffin", "rabid_rabbit", "zombie_bear", "acrobat", "juggler", "magician", "deranged_jester", "enchanted_pawn", "enchanted_knight", "enchanted_bishop", "enchanted_rook", "enchanted_queen", "enchanted_king", "squawker", "anchor_shark", "brine_marksman", "tidal_conjuror", "captain_fishhook", "the_kraken"
+        "fly", "rat", "skunk", "porcupine", "slimy", "frog", "snake", "swampy",
+        "alligator", "sea_snail", "crab", "aquahorse", "nom_nom", "turtle",
+        "jungle_sprite", "myconid", "treant", "centaur_archer", "gobo_stabby",
+        "gobo_slashy", "gobo_smashy", "gobo_shooty", "gobo_boomy", "eye",
+        "eyes", "veyes", "novice_sorcerer", "ice_sorcerer", "flame_sorcerer",
+        "elementalist", "gummy_bear", "panda", "black_bear", "grizzly_bear",
+        "polar_bear", "magnetic_golem", "stalactite_golem", "granite_golem",
+        "zombie", "vampire", "werewolf", "abyssal_imp", "soul_hunter",
+        "infernal_warlock", "giant_shoebill", "marine_huntress", "luna_empress",
+        "gobo_chieftain", "the_watcher", "chronofrost_sorcerer", "red_panda",
+        "crystal_colossus", "dusk_revenant", "demonic_overlord",
+        "butterjerry", "jackalope", "dodocamel", "manticore", "griffin",
+        "rabid_rabbit", "zombie_bear", "acrobat", "juggler", "magician",
+        "deranged_jester", "enchanted_pawn", "enchanted_knight", "enchanted_bishop",
+        "enchanted_rook", "enchanted_queen", "enchanted_king", "squawker",
+        "anchor_shark", "brine_marksman", "tidal_conjuror", "captain_fishhook", "the_kraken"
     ];
 
     // 图片缓存
