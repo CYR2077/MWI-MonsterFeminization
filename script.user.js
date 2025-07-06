@@ -12,6 +12,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=milkywayidle.com
 // @resource     monsterData https://raw.githubusercontent.com/CYR2077/MWI-MonsterFeminization/refs/heads/main/resource/monster-data.json
 // @grant        GM_getResourceText
+// @run-at       document-start
 // ==/UserScript==
 
 (function () {
