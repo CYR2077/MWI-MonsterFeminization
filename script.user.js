@@ -1,8 +1,15 @@
 // ==UserScript==
-// @name         WebP怪物图标替换 (JSON资源版)
+// @name         [银河奶牛] 怪物娘化 / MWI-MonsterFeminization
+// @name:en      MWI-MonsterFeminization
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      0.1
+// @description  怪物娘化
+// @description:en  MonsterFeminization
+// @author       XIxixi297
+// @license      CC-BY-NC-SA-4.0
 // @match        https://www.milkywayidle.com/*
+// @match        https://test.milkywayidle.com/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=milkywayidle.com
 // @resource     monsterData https://raw.githubusercontent.com/CYR2077/MWI-MonsterFeminization/refs/heads/main/resource/monster-data.json
 // @grant        GM_getResourceText
 // ==/UserScript==
@@ -12,17 +19,8 @@
 
     // 怪物名称列表
     const monsterNames = [
-        "fly", "rat", "skunk", "porcupine", "slimy", "frog", "snake", "swampy",
-        "alligator", "sea_snail", "crab", "aquahorse", "nom_nom", "turtle",
-        "jungle_sprite", "myconid", "treant", "centaur_archer", "gobo_stabby",
-        "gobo_slashy", "gobo_smashy", "gobo_shooty", "gobo_boomy", "eye",
-        "eyes", "veyes", "novice_sorcerer", "ice_sorcerer", "flame_sorcerer",
-        "elementalist", "gummy_bear", "panda", "black_bear", "grizzly_bear",
-        "polar_bear", "magnetic_golem", "stalactite_golem", "granite_golem",
-        "zombie", "vampire", "werewolf", "abyssal_imp", "soul_hunter", 
-        "infernal_warlock", "giant_shoebill", "marine_huntress", "luna_empress",
-        "gobo_chieftain", "the_watcher", "chronofrost_sorcerer", "red_panda",
-        "crystal_colossus", "dusk_revenant", "demonic_overlord"
+        "fly", "rat", "skunk", "porcupine", "slimy", "frog", "snake", "swampy", "alligator", "sea_snail", "crab", "aquahorse", "nom_nom", "turtle", "jungle_sprite", "myconid", "treant", "centaur_archer", "gobo_stabby", "gobo_slashy", "gobo_smashy", "gobo_shooty", "gobo_boomy", "eye", "eyes", "veyes", "novice_sorcerer", "ice_sorcerer", "flame_sorcerer", "elementalist", "gummy_bear", "panda", "black_bear", "grizzly_bear", "polar_bear", "magnetic_golem", "stalactite_golem", "granite_golem", "zombie", "vampire", "werewolf", "abyssal_imp", "soul_hunter", "infernal_warlock", "giant_shoebill", "marine_huntress", "luna_empress", "gobo_chieftain", "the_watcher", "chronofrost_sorcerer", "red_panda", "crystal_colossus", "dusk_revenant", "demonic_overlord",
+        "butterjerry", "jackalope", "dodocamel", "manticore", "griffin", "rabid_rabbit", "zombie_bear", "acrobat", "juggler", "magician", "deranged_jester", "enchanted_pawn", "enchanted_knight", "enchanted_bishop", "enchanted_rook", "enchanted_queen", "enchanted_king", "squawker", "anchor_shark", "brine_marksman", "tidal_conjuror", "captain_fishhook", "the_kraken"
     ];
 
     // 图片缓存
@@ -46,7 +44,7 @@
     // 加载怪物数据
     function loadMonsterData() {
         console.log('🚀 开始加载怪物数据...');
-        
+
         try {
             const dataText = GM_getResourceText('monsterData');
             if (!dataText) {
@@ -56,17 +54,17 @@
 
             const monsterData = JSON.parse(dataText);
             let loadedCount = 0;
-            
+
             for (const [name, base64Data] of Object.entries(monsterData)) {
                 if (monsterNames.includes(name) && base64Data) {
                     imageCache.set(name, base64Data);
                     loadedCount++;
                 }
             }
-            
+
             console.log(`✅ 数据加载完成: ${loadedCount}/${monsterNames.length}`);
             return loadedCount;
-            
+
         } catch (error) {
             console.error('❌ 加载数据失败:', error);
             return 0;
@@ -87,7 +85,7 @@
             if (match && monsterNames.includes(match[1])) {
                 const monsterName = match[1];
                 const imageURL = imageCache.get(monsterName);
-                
+
                 if (imageURL) {
                     replaceElement(use, monsterName, imageURL);
                     processedElements.add(use);
@@ -108,12 +106,12 @@
             if (!svg) return;
 
             const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-            
+
             // 设置加载事件
             image.addEventListener('load', () => {
                 use.setAttribute('data-hide-original', 'true');
             });
-            
+
             image.addEventListener('error', () => {
                 console.warn(`❌ 图片显示失败: ${monsterName}`);
                 if (image.parentNode) {
@@ -131,7 +129,7 @@
             // 设置图片
             image.setAttribute('href', imageURL);
             image.setAttribute('data-monster-replaced', monsterName);
-            
+
             if (!image.getAttribute('width')) image.setAttribute('width', '100%');
             if (!image.getAttribute('height')) image.setAttribute('height', '100%');
             image.setAttribute('preserveAspectRatio', 'xMidYMid meet');
@@ -158,19 +156,19 @@
     // 初始化
     function init() {
         console.log('🎮 怪物图标替换器启动 (JSON资源版)...');
-        
+
         injectCSS();
-        
+
         const loadedCount = loadMonsterData();
         if (loadedCount === 0) {
             console.error('❌ 数据包加载失败，请检查monster-data.json文件');
             return;
         }
-        
+
         setupObserver();
         replaceMonsterIcons();
         setInterval(replaceMonsterIcons, 2000);
-        
+
         console.log('✅ 初始化完成');
     }
 
