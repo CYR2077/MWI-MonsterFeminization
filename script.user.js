@@ -1,9 +1,10 @@
 // ==UserScript==
-// @name         WebP怪物图标替换
+// @name         WebP怪物图标替换 (JSON资源版)
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @match        https://www.milkywayidle.com/*
-// @grant        none
+// @resource     monsterData https://raw.githubusercontent.com/CYR2077/MWI-MonsterFeminization/refs/heads/main/resource/monster-data.json
+// @grant        GM_getResourceText
 // ==/UserScript==
 
 (function () {
@@ -24,18 +25,15 @@
         "crystal_colossus", "dusk_revenant", "demonic_overlord"
     ];
 
-    // WebP图片基础路径
-    const baseURL = 'https://raw.githubusercontent.com/CYR2077/MWI-MonsterFeminization/refs/heads/main/resource/webp/';
-    
     // 图片缓存
     const imageCache = new Map();
     const processedElements = new WeakSet();
 
-    // 注入CSS隐藏原始图标
+    // 注入CSS
     function injectCSS() {
         const style = document.createElement('style');
         style.textContent = `
-            use[href*="/static/media/combat_monsters_sprite.75d964d1.svg#"] {
+            use[href*="/static/media/combat_monsters_sprite.75d964d1.svg#"][data-hide-original] {
                 opacity: 0 !important;
             }
             image[data-monster-replaced] {
@@ -45,24 +43,34 @@
         (document.head || document.documentElement).appendChild(style);
     }
 
-    // 预加载所有WebP图片
-    async function preloadImages() {
-        console.log('🚀 开始加载怪物图片...');
+    // 加载怪物数据
+    function loadMonsterData() {
+        console.log('🚀 开始加载怪物数据...');
         
-        const promises = monsterNames.map(async (name) => {
-            try {
-                const response = await fetch(`${baseURL}${name}.webp`);
-                if (response.ok) {
-                    const blob = await response.blob();
-                    imageCache.set(name, URL.createObjectURL(blob));
-                }
-            } catch (error) {
-                console.warn(`❌ 加载失败: ${name}.webp`);
+        try {
+            const dataText = GM_getResourceText('monsterData');
+            if (!dataText) {
+                console.error('❌ 无法获取资源数据');
+                return 0;
             }
-        });
 
-        await Promise.allSettled(promises);
-        console.log(`✅ 加载完成: ${imageCache.size}/${monsterNames.length}`);
+            const monsterData = JSON.parse(dataText);
+            let loadedCount = 0;
+            
+            for (const [name, base64Data] of Object.entries(monsterData)) {
+                if (monsterNames.includes(name) && base64Data) {
+                    imageCache.set(name, base64Data);
+                    loadedCount++;
+                }
+            }
+            
+            console.log(`✅ 数据加载完成: ${loadedCount}/${monsterNames.length}`);
+            return loadedCount;
+            
+        } catch (error) {
+            console.error('❌ 加载数据失败:', error);
+            return 0;
+        }
     }
 
     // 替换怪物图标
@@ -101,6 +109,18 @@
 
             const image = document.createElementNS('http://www.w3.org/2000/svg', 'image');
             
+            // 设置加载事件
+            image.addEventListener('load', () => {
+                use.setAttribute('data-hide-original', 'true');
+            });
+            
+            image.addEventListener('error', () => {
+                console.warn(`❌ 图片显示失败: ${monsterName}`);
+                if (image.parentNode) {
+                    image.parentNode.removeChild(image);
+                }
+            });
+
             // 复制属性
             Array.from(use.attributes).forEach(attr => {
                 if (attr.name !== 'href') {
@@ -116,8 +136,8 @@
             if (!image.getAttribute('height')) image.setAttribute('height', '100%');
             image.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-            // 替换
-            use.parentNode.replaceChild(image, use);
+            // 添加到DOM
+            use.parentNode.insertBefore(image, use);
         } catch (error) {
             console.error(`❌ 替换失败: ${monsterName}`, error);
         }
@@ -136,33 +156,23 @@
     }
 
     // 初始化
-    async function init() {
-        console.log('🎮 怪物图标替换器启动...');
+    function init() {
+        console.log('🎮 怪物图标替换器启动 (JSON资源版)...');
         
-        // 立即隐藏原始图标
         injectCSS();
         
-        // 设置监听器
+        const loadedCount = loadMonsterData();
+        if (loadedCount === 0) {
+            console.error('❌ 数据包加载失败，请检查monster-data.json文件');
+            return;
+        }
+        
         setupObserver();
-        
-        // 预加载图片
-        await preloadImages();
-        
-        // 替换现有图标
         replaceMonsterIcons();
-        
-        // 定时检查（防止遗漏）
         setInterval(replaceMonsterIcons, 2000);
         
         console.log('✅ 初始化完成');
     }
-
-    // 清理
-    window.addEventListener('beforeunload', () => {
-        for (const url of imageCache.values()) {
-            URL.revokeObjectURL(url);
-        }
-    });
 
     // 启动
     if (document.readyState === 'loading') {
